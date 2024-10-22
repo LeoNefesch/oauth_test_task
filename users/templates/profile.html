@@ -1,0 +1,41 @@
+<!-- templates/profile.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Добро пожаловать!</h1>
+    <button id="getUserData">Получить данные о пользователях</button>
+    <div id="userData"></div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#getUserData").click(function() {
+                $.ajax({
+                    url: "/api/users/",
+                    method: "GET",
+                    success: function(data) {
+
+                    $("#userData").empty();
+
+                    $.each(data, function(index, user) {
+                        var userInfo = "<p>ID: " + user.id + "<br>" +
+                                       "Username: " + user.username + "<br>" +
+                                       "Email: " + user.email + "</p>";
+                        $("#userData").append(userInfo);
+                    });
+
+                    },
+                    error: function(err) {
+                        alert("Ошибка при получении данных");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
