@@ -8,10 +8,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = (os.getenv('DEBUG', 'false').lower() == 'true')
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+SOCIAL_APP_SECRET = os.getenv('SOCIAL_APP_SECRET')
 
 # ADMINS = (
 #     # ('Your Name', 'your_email@example.com'),
@@ -34,7 +36,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',  # Google OAuth
+    'allauth.socialaccount.providers.google',
     # "allauth.usersessions",
     'users',
 ]
@@ -77,10 +79,6 @@ DATABASES = {
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -103,7 +101,6 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-# Google OAuth settings
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -114,15 +111,15 @@ SOCIALACCOUNT_PROVIDERS = {
             'access_type': 'online',
         },
         'APP': {
-            'client_id': os.getenv('CLIENT_ID'),
-            'secret': os.getenv('SOCIAL_APP_SECRET'),
+            'client_id': GOOGLE_CLIENT_ID,
+            'secret': SOCIAL_APP_SECRET,
             'key': ''
         }
     }
 }
 
 
-LOGIN_URL = '/admin/login/'
+LOGIN_URL = '/accounts/'
 LOGIN_REDIRECT_URL = '/api/profile/'
 LOGOUT_REDIRECT_URL = '/accounts/'
 
@@ -130,13 +127,10 @@ REST_FRAMEWORK = {
     # 'DEFAULT_AUTHENTICATION_CLASSES': (
     #     'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     # ),
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 # LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'ru'
