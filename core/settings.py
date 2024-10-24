@@ -15,12 +15,6 @@ ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 SOCIAL_APP_SECRET = os.getenv('SOCIAL_APP_SECRET')
 
-# ADMINS = (
-#     # ('Your Name', 'your_email@example.com'),
-# )
-#
-# MANAGERS = ADMINS
-
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 INSTALLED_APPS = [
@@ -32,12 +26,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'rest_framework',
-    # 'rest_framework.authentication',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    # "allauth.usersessions",
     'users',
 ]
 
@@ -72,11 +64,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
+ENGINE = 'django.db.backends.postgresql_psycopg2'
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': ENGINE,
+        'OPTIONS': {'options': '-c search_path=sch_testdb,public'},
+        'NAME': os.getenv('PG_DATABASE_TEST'),
+        'USER': os.getenv('PG_USER_TEST'),
+        'PASSWORD': os.getenv('PG_PASSWORD_TEST'),
+        'HOST': os.getenv('PG_HOST_TEST'),
+        'PORT': os.getenv('PG_PORT_TEST'),
+        'DISABLE_SERVER_SIDE_CURSORS': True},
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -109,30 +108,27 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
+            'prompt': 'select_account',
         },
-        'APP': {
+        'APP': {  # 'SocialAppName': 'Web client 1'
             'client_id': GOOGLE_CLIENT_ID,
             'secret': SOCIAL_APP_SECRET,
             'key': ''
-        }
+        },
+        'OAUTH_PKCE_ENABLED': True,
     }
 }
-
 
 LOGIN_URL = '/accounts/'
 LOGIN_REDIRECT_URL = '/api/profile/'
 LOGOUT_REDIRECT_URL = '/accounts/'
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #     'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-    # ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
 }
 
-# LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
