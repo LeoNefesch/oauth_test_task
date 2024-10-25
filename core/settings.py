@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 
@@ -10,7 +11,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = (os.getenv('DEBUG', 'false').lower() == 'true')
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(',')
 
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 SOCIAL_APP_SECRET = os.getenv('SOCIAL_APP_SECRET')
@@ -77,6 +79,8 @@ DATABASES = {
         'PORT': os.getenv('PG_PORT_TEST'),
         'DISABLE_SERVER_SIDE_CURSORS': True},
 }
+
+DATABASES['default'] = dj_database_url.parse(os.getenv('DATABASE_URL'))
 
 AUTH_PASSWORD_VALIDATORS = [
     {

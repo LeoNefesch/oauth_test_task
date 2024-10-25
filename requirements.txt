@@ -7,3 +7,4 @@ psycopg2==2.9.10
 python-dotenv==1.0.1
 PyJWT==2.9.0
 cryptography==43.0.3
+gunicorn
